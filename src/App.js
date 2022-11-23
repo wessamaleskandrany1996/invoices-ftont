@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { GlobalProvider } from "./context/GlobalContext";
+import Home from "./components/Home";
+import NavBar from "./components/NavBar";
+import Products from "./pages/Products";
+import NotFound from "./pages/NotFound";
+import Inventory from "./pages/Inventory";
+import Suppliers from "./pages/Suppliers";
+import AddUser from "./pages/AddUser";
+import Invoices from "./pages/Invoices";
+import Login from "./pages/Login";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <NavBar />
+      <GlobalProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/invoice" element={<Invoices />} />
+            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/suppliers" element={<Suppliers />} />
+            <Route path="/adduser" element={<AddUser />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Router>
+      </GlobalProvider>
     </div>
   );
 }
