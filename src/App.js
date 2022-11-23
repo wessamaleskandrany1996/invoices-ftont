@@ -10,6 +10,7 @@ import Suppliers from "./pages/Suppliers";
 import AddUser from "./pages/AddUser";
 import Invoices from "./pages/Invoices";
 import Login from "./pages/Login";
+import Clients from "./pages/Clients";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/invoice" element={<Invoices />} />
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/suppliers" element={<Suppliers />} />
+            <Route path="/clients" element={<Clients />} />
             <Route path="/adduser" element={<AddUser />} />
             <Route path="/login" element={<Login />} />
             <Route path="*" element={<NotFound />} />
