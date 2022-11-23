@@ -1,8 +1,45 @@
+/** @format */
+
 import React from "react";
 import SideBar from "../components/SideBar";
 import { BsThreeDots } from "react-icons/bs";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import swal from "sweetalert";
 
 const Products = () => {
+  const [products, setProducts] = useState([]);
+  const [searchTitle, setSearchTitle] = useState("");
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    await axios.get("http://fakestoreapi.com/products").then(({ data }) => {
+      setProducts(data);
+    });
+  };
+
+  const deleteProduct = (id) => {
+    swal.fire({
+      title: `are you sure you want to delete this product ?`,
+      showCancelButton: true,
+    }).then((data) => {
+      if (data.isConfirmed) {
+        axios
+          .delete("http://fakestoreapi.com/products/" + id)
+          .then(({ data }) => {
+            console.log(data.message);
+            fetchProducts();
+          })
+          .catch(({ response: { data } }) => {
+            console.log(data.message);
+          });
+      }
+    });
+  };
+
   return (
     <div className="grid grid-cols-12">
       <SideBar />
@@ -14,6 +51,7 @@ const Products = () => {
             className="border border-gray-400 rounded p-2 m-3 w-80"
             type="text"
             placeholder="product name"
+            onChange={(e) => setSearchTitle(e.target.value)}
           />
         </div>
         <div className=" rounded m-4 text-xl ">
@@ -28,33 +66,30 @@ const Products = () => {
               </tr>
             </thead>
             <tbody className="bg-blue-50 text-center">
-              <tr>
-                <td>1</td>
-                <td>te7ena</td>
-                <td>2$</td>
-                <td>40</td>
-                <td>
-                  <BsThreeDots className="hover:bg-blue-300 rounded m-auto" />
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>jasmine</td>
-                <td>3$</td>
-                <td>40</td>
-                <td>
-                  <BsThreeDots className="hover:bg-blue-300 rounded m-auto" />
-                </td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>honey</td>
-                <td>5$</td>
-                <td>40</td>
-                <td>
-                  <BsThreeDots className="hover:bg-blue-300 rounded m-auto" />
-                </td>
-              </tr>
+              {products.length > 0 &&
+                products
+                  .filter((value) => {
+                    if (searchTitle === "") {
+                      return value;
+                    } else if (
+                      value.title
+                        .toLowerCase()
+                        .includes(searchTitle.toLowerCase())
+                    ) {
+                      return value;
+                    }
+                  })
+                  .map((row, key) => (
+                    <tr key={key}>
+                      <td>{row.id}</td>
+                      <td>{row.title}</td>
+                      <td>{row.price}</td>
+                      <td>{row.amount}</td>
+                      <td>
+                      <BsThreeDots className="hover:bg-blue-300 rounded mx-auto" />
+                      </td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
